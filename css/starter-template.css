@@ -1,0 +1,16 @@
+body {
+    padding-top: 50px;
+  }
+  .starter-template {
+    padding: 40px 15px;
+    text-align: center;
+  }
+  .row{
+  }
+  #editor{
+    padding-bottom:90%;
+    width: 100%;
+  }
+  .navbar {
+    height:5%;
+  }
