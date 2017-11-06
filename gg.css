@@ -1,0 +1,29 @@
+.nav{
+    background-color: #3c3c3c;
+    font-size: 50px;
+
+}
+
+.nav a{
+    margin-left: 20px;
+}
+
+.input{
+    position:relative;
+    top:100px;
+    left: 10px
+}
+
+#md,#html{
+    height: 510px;
+}
+#md{
+
+    left: 50px;
+}
+#html{
+    border: solid 1px darkgrey;
+    border-radius: 5px;
+    width: 600px;
+    right: 50px
+}
