@@ -17,13 +17,18 @@
 #md,#html{
     height: 510px;
 }
-#md{
 
+#md{
     left: 50px;
 }
+
 #html{
     border: solid 1px darkgrey;
     border-radius: 5px;
     width: 600px;
     right: 50px
+}
+
+.highlightedText {
+    background-color: #f5e79e;
 }

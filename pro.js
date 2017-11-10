@@ -1,20 +1,49 @@
-var pro = angular.module('pro', [
+var pro=angular.module('pro',[
     "ngSanitize",
     "ngRoute"
-]);
+ ]);
 
-pro.controller('download', ['$scope', 'http', function ($scope, $http) {
-
+pro.controller('download',['$scope','http',function($scope,$http){
 }]);
 
-pro.controller('new', ['$scope', '$http', function ($scope, $http) {
+pro.controller('new',['$scope','$http',function($scope,$http){
 }]);
 
-pro.controller('main', ["$scope", "$sce", '$http', function ($scope, $sce, $http) {
-    $scope.trustHtml = "start here...";
-    $scope.text0 = [];
-    $scope.newString = "start here...";
-    $scope.refresh = function () {
+
+pro.factory("notifyService", function(){
+    var target = {
+        search:"key"
+    };
+
+    return target;
+});
+
+
+pro.controller('main',["$scope","$sce",'$http','$rootScope','notifyService','$log',function($scope,$sce,$http,$rootScope,notifyService,$log){
+    $rootScope.notify=notifyService;
+    $rootScope.trustHtml="start here...";
+    $scope.text0=[];
+    $scope.newString="start here...";
+    $scope.highlight=function(){
+        $scope.refresh();
+        $log.info("text: " + $rootScope.trustHtml);
+        $log.info("search: " + $rootScope.notify.search);
+        if (!$rootScope.notify.search) {
+            return;
+        }
+        var text = encodeURI($rootScope.trustHtml);
+        var search = encodeURI($rootScope.notify.search);
+
+        var regex = new RegExp(search, 'gi');
+        var result = text.replace(regex, '<span class="highlightedText">$&</span>');
+        result = decodeURI(result);
+        $log.info("result: " + result );
+
+        $rootScope.trustHtml =$sce.trustAsHtml(result);
+        return;
+
+    };
+    $scope.refresh=function() {
         function isEmpty(str) {
             if (str == "") {
                 return true
@@ -97,18 +126,18 @@ pro.controller('main', ["$scope", "$sce", '$http', function ($scope, $sce, $http
                     }
                 }
                 /* List contains paragraph Feature
-    
-                *   This is a list item with two paragraphs.
-    
-                    This is the second paragraph in the list item. You're
-                only required to indent the first line. Lorem ipsum dolor
-                sit amet, consectetuer adipiscing elit.
-    
-                *   Another item in the same list.
-    
-                The following code enables gramma above.
-                Variable list shows whether there are more lines in this list
-                */
+
+                 *   This is a list item with two paragraphs.
+
+                 This is the second paragraph in the list item. You're
+                 only required to indent the first line. Lorem ipsum dolor
+                 sit amet, consectetuer adipiscing elit.
+
+                 *   Another item in the same list.
+
+                 The following code enables gramma above.
+                 Variable list shows whether there are more lines in this list
+                 */
                 var j = i; list = true;
                 if (isEmpty(text[i + 1])) {//*words\nwords
                     while (j < text.length - 1) {//traverse until the line is indented, then set list=true
@@ -134,11 +163,15 @@ pro.controller('main', ["$scope", "$sce", '$http', function ($scope, $sce, $http
             }
 
         }
-        $scope.text0 = text;
-        $scope.trustHtml = "";
-        for (var i = 0; i < $scope.text0.length; i++) {
-            $scope.trustHtml += $sce.trustAsHtml($scope.text0[i]);
+        $scope.text0=text;
+        $rootScope.trustHtml="";
+        for (var i=0;i<$scope.text0.length;i++){
+            $rootScope.trustHtml+=$sce.trustAsHtml($scope.text0[i]);
         }
-    }
+        //$scope.highlight();
+    };
 
 }]);
+
+
+
