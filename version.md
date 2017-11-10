@@ -1,14 +1,12 @@
-## Alpha 1
+## Alpha 3 Build 2017-11-10 19:15:39
 
-done
+done 
 
-* bootstrap
-
-* gramma #
+* gramma *
 
 To-do
 
-* gramma *
+* rewrite #
 
 * textarea css optimization
 
@@ -26,14 +24,16 @@ To-do
 
 * textarea css optimization
 
-## Alpha 3
+## Alpha 1
 
-done 
+done
 
-* gramma *
+* bootstrap
+
+* gramma #
 
 To-do
 
-* rewrite #
+* gramma *
 
 * textarea css optimization
