@@ -62,7 +62,7 @@ pro.controller('main',["$scope","$sce",'$http','$rootScope','notifyService','$lo
                     text[i - 1] = text[i - 1] + "</li>";
                 }
             }
-            if (!list && ulist && !text[i].match(/^\*/)) {
+            if (!list && ulist && !text[i].match(/^\*[ ]/)) {
                 ulist = false;
                 text[i] = "</ul>" + text[i];
             }
@@ -109,16 +109,16 @@ pro.controller('main',["$scope","$sce",'$http','$rootScope','notifyService','$lo
             // # Title
 
             // */[0-9]. list
-            if (text[i].match(/^\*/) || text[i].match(/^[0-9]\./)) {
+            if (text[i].match(/^\*[ ]/) || text[i].match(/^[0-9]\./)) {
                 //if there is no <ul><ol> above add <ul><ol>
                 if (ulist) {
-                    text[i] = text[i].replace(/^\*/, "<li>");
+                    text[i] = text[i].replace(/^\*[ ]/, "<li>");
                 }
                 else if (olist) {
                     text[i] = text[i].replace(/^[0-9]\./, "<li>");
                 } else {
-                    if (text[i].match(/^\*/)) {
-                        text[i] = "<ul>" + text[i].replace(/^\*/, "<li>");
+                    if (text[i].match(/^\*[ ]/)) {
+                        text[i] = "<ul>" + text[i].replace(/^\*[ ]/, "<li>");
                         ulist = true;
                     } else {
                         text[i] = "<ol>" + text[i].replace(/^[0-9]\./, "<li>");
@@ -146,7 +146,7 @@ pro.controller('main',["$scope","$sce",'$http','$rootScope','notifyService','$lo
                         }
                         else {
                             if (!text[j + 1].match(/^\s{4}./)) list = false;//line starts without indent
-                            if (text[i + 1].match(/^\*/) || text[i + 1].match(/^[0-9]\./)) list = false;//line starts without * or [0-9]\.
+                            if (text[i + 1].match(/^\*[ ]/) || text[i + 1].match(/^[0-9]\./)) list = false;//line starts without * or [0-9]\.
                             break;
                             //if line starts with indent or */[0-9] then list=true
                         }
@@ -158,9 +158,27 @@ pro.controller('main',["$scope","$sce",'$http','$rootScope','notifyService','$lo
                 }
                 // */[0-9]. list
 
-
-                if (isEmpty(text[i])) { text[i] = text[i] + "<br/>"; }//whether this line is empty add </br>
             }
+
+            // * strong
+            var strong = text[i].match(/\*\*.*?\*\*/g);
+            if (strong) {
+                for (var j = 0; j < strong.length; j++) {
+                    text[i] = text[i].replace(strong[j], "<b>" + strong[j].substr(2, strong[j].length - 4) + "</b>")
+                }
+            }
+            // * strong
+
+            // * emphasize
+            var em = text[i].match(/\*.*?\*/g);
+            if (em) {
+                for (var j = 0; j < em.length; j++) {
+                    text[i] = text[i].replace(em[j], "<em>" + em[j].substr(1, em[j].length - 2) + "</em>")
+                }
+            }
+            // * emphasize
+
+            if (isEmpty(text[i])) { text[i] = text[i] + "<br/>"; }//whether this line is empty add </br>
 
         }
         $scope.text0=text;
