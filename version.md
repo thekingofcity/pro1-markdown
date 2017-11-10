@@ -1,3 +1,17 @@
+## Alpha 4
+
+done 
+
+* gramma \*\*words\*\*
+
+* gramma \*words\*
+
+To-do
+
+* rewrite #
+
+* textarea css optimization
+
 ## Alpha 3 Build 2017-11-10 19:15:39
 
 done 
