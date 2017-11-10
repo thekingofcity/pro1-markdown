@@ -1,8 +1,17 @@
-<div class="input">
-<div  class="col-md-6">
-    <textarea id="md" rows="30" cols="50" wrap="virtual" ng-model="newString" ng-change="refresh()" autofocus></textarea>
-</div>
-<div class="col-md-6">
-    <p id="html" ng-bind-html="trustHtml" ></p>
-</div>
-</div>
+
+    <div  class="col-md-2">
+        <input type="text" ng-model="notify.search"/>
+    </div>
+    <div class="col-md-10">
+        <button ng-click="highlight()">search</button>
+    </div>
+
+    <div class="input">
+       <div  class="col-md-6">
+            <textarea id="md" rows="30" cols="50" wrap="virtual" ng-model="newString" ng-change="refresh()" autofocus></textarea>
+        </div>
+        <div class="col-md-6">
+            <p id="html" ng-bind-html="trustHtml" ></p>
+        </div>
+    </div>
+
