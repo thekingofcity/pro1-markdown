@@ -1,3 +1,15 @@
+## Alpha 5
+
+done 
+
+* gramma indent code
+
+* rewrite #
+
+To-do
+
+* textarea css optimization
+
 ## Alpha 4 Build 2017-11-10 23:10:10
 
 done 
