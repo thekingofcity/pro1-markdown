@@ -97,20 +97,20 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
             }
 
             // ' code
-            if(code){//if there is <code> above
-                if(!text[i].match(/[ ]{4}/)){//if this line has no indent or something else
-                    text[i]=text[i]+"</code></pre>";
-                    code=false;
-                }else{
-                    text[i]=text[i].substr(4)+"<br/>";
+            if (code) {//if there is <code> above
+                if (!text[i].match(/[ ]{4}/)) {//if this line has no indent or something else
+                    text[i] = text[i] + "</code></pre>";
+                    code = false;
+                } else {
+                    text[i] = text[i].substr(4) + "<br/>";
                 }
                 continue;//skip the loop   doesn't change anything in <code>
             }
-            if(text[i].match(/[ ]{4}/)){//can be rewritten as !code&&text[i].match(/[ ]{4}/)
-                if(!code){//if this line was indented and there is no <code> above
-                    text[i]="<pre><code>"+text[i].substr(4)+"<br/>";
+            if (text[i].match(/[ ]{4}/)) {//can be rewritten as !code&&text[i].match(/[ ]{4}/)
+                if (!code) {//if this line was indented and there is no <code> above
+                    text[i] = "<pre><code>" + text[i].substr(4) + "<br/>";
                 }
-                code=true;
+                code = true;
             }
             // ' code
 
@@ -192,7 +192,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
                     text[i] = text[i].replace(em[j], "<em>" + em[j].substr(1, em[j].length - 2) + "</em>")
                 }
             }
-            * emphasize
+            // * emphasize
 
             if (isEmpty(text[i])) { text[i] = text[i] + "<br/>"; }//whether this line is empty add </br>
         }
@@ -207,6 +207,3 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
     };
 
 }]);
-
-
-
