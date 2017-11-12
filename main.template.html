@@ -4,8 +4,13 @@
             https://www.cnblogs.com/rohelm/p/4033513.html
             https://docs.angularjs.org/api/ng/input/input%5Btext%5D
         -->
-        <input name="search" type="search" required ng-change="highlight()" ng-model="notify.search" />
-        <p ng-show="!(search.search.$dirty&&search.search.$valid)">Required</p>
+        <div class="col-md-2">
+        <input name="search" type="search" ng-model="notify.search" />
+        </div>
+        <div class="col-md-10">
+        <button ng-click="highlight()" >search</button>
+        <!--<p ng-show="!(search.search.$dirty&&search.search.$valid)">Required</p>-->
+        </div>
     </form>
 </div>
 

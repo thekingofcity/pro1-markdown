@@ -44,7 +44,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
     $scope.text0 = [];
     $scope.newString = "start here...";
     $scope.highlight = function () {
-        //$scope.refresh();
+        $scope.refresh();
         //$log.info("text: " + $rootScope.trustHtml);
         //$log.info("search: " + $rootScope.notify.search);
         if (!$rootScope.notify.search) {
@@ -54,15 +54,20 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         //     $rootScope.trustHtml = sessionStorage.trustHtml;
         //     return;
         // }
-        var text = encodeURI(sessionStorage.trustHtml);
+        //var text = encodeURI(sessionStorage.trustHtml);
+        var text=encodeURI($scope.newString);
         var search = encodeURI($rootScope.notify.search);
 
         var regex = new RegExp(search, 'gi');
         var result = text.replace(regex, '<span class="highlightedText">$&</span>');
         result = decodeURI(result);
         //$log.info("result: " + result );
+        var temp=$scope.newString;
+        $scope.newString=result;
+        $scope.refresh();
+        $scope.newString=temp;
 
-        $rootScope.trustHtml = $sce.trustAsHtml(result);
+        //$rootScope.trustHtml = $sce.trustAsHtml(result);
         return;
 
     };
