@@ -1,3 +1,29 @@
+## Alpha 6
+
+done
+
+* gramma *** dividing line
+
+To-do
+
+* [bug] search highlight in trustHtml won't clear when search box is empty
+
+* [bug] when first line is indented, no code label appear due to angualrjs
+
+* [feature] gramma > blockquote
+
+## Alpha 5 2017-11-11 18:15:17
+
+done 
+
+* gramma indent code
+
+* rewrite #
+
+To-do
+
+* textarea css optimization
+
 ## Alpha 4 Build 2017-11-10 23:10:10
 
 done 
