@@ -98,7 +98,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
 
             // ' code
             if (code) {//if there is <code> above
-                if (!text[i].match(/[ ]{4}/)) {//if this line has no indent or something else
+                if (!text[i].match(/^[ ]{4}/)) {//if this line has no indent or something else
                     text[i] = text[i] + "</code></pre>";
                     code = false;
                 } else {
@@ -106,13 +106,21 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
                 }
                 continue;//skip the loop   doesn't change anything in <code>
             }
-            if (text[i].match(/[ ]{4}/)) {//can be rewritten as !code&&text[i].match(/[ ]{4}/)
+            if (text[i].match(/^[ ]{4}/)) {//can be rewritten as !code&&text[i].match(/[ ]{4}/)
                 if (!code) {//if this line was indented and there is no <code> above
                     text[i] = "<pre><code>" + text[i].substr(4) + "<br/>";
                 }
                 code = true;
+                continue;
             }
             // ' code
+
+            // *** dividing line
+            if(text[i].match(/(\*+[ ]*?){3,}/)||text[i].match(/(\-+[ ]*?){3,}/)) {
+                text[i]="<hr>";
+                continue;
+            }
+            // *** dividing line
 
             // # Title
             title = text[i].match(/^#{1,6}/);
