@@ -55,17 +55,17 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         //     return;
         // }
         //var text = encodeURI(sessionStorage.trustHtml);
-        var text=encodeURI($scope.newString);
+        var text = encodeURI($scope.newString);
         var search = encodeURI($rootScope.notify.search);
 
         var regex = new RegExp(search, 'gi');
         var result = text.replace(regex, '<span class="highlightedText">$&</span>');
         result = decodeURI(result);
         //$log.info("result: " + result );
-        var temp=$scope.newString;
-        $scope.newString=result;
+        var temp = $scope.newString;
+        $scope.newString = result;
         $scope.refresh();
-        $scope.newString=temp;
+        $scope.newString = temp;
 
         //$rootScope.trustHtml = $sce.trustAsHtml(result);
         return;
@@ -80,7 +80,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
             }
         }
         //var text = $scope.newString.replace(/\n/g, '<br/>\n').split(/\n/g);
-        var title = "", code = false, strong = "", em = "";
+        var title = "", code = false, cite = false; strong = "", em = "";
         var ulist = false, olist = false, list = false;//refer to    List contains paragraph Feature
         var text = $scope.newString.split(/\n/g);
         for (var i = 0; i < text.length; i++) {
@@ -111,24 +111,40 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
                 }
                 continue;//skip the loop   doesn't change anything in <code>
             }
-            if (text[i].match(/^[ ]{4}/)) {//can be rewritten as !code&&text[i].match(/[ ]{4}/)
+            if (!list && text[i].match(/^[ ]{4}/)) {//can be rewritten as !code&&text[i].match(/[ ]{4}/)
+                //adding !list&& to avoid <code> in list
                 if (!code) {//if this line was indented and there is no <code> above
                     text[i] = "<pre><code>" + text[i].substr(4) + "<br/>";
                 }
                 code = true;
                 continue;
             }
-            if (text[i].match(/>.+/)){
-                var temp='<span class="cite">';
-                text[i]=text[i].replace(/>.+/, '<span class="cite">$&</span>');
-                text[i]=text[i].substr(0,temp.length)+text[i].substr(temp.length+1,text[i].length-1-temp.length);
-                continue;
+            if (cite) {//if there is <span class="cite"> above
+                if (!text[i].match(/^>/)) {//if this line has no ">""
+                    text[i] = text[i] + "</p>";
+                    cite = false;
+                } else {
+                    text[i] = text[i].substr(1);
+                }
+                //continue;//skip the loop   doesn't change anything in <cite>
             }
+            if (text[i].match(/^>/)) {
+                if (!cite) {//if this line was indented and there is no <code> above
+                    text[i] = '<p class="cite">' + text[i].substr(1);
+                }
+                cite = true;
+            }
+            // if (text[i].match(/^>.+/)) {
+            //     var temp = '<span class="cite">';
+            //     text[i] = text[i].replace(/^>.+/, '<span class="cite">$&</span>');
+            //     text[i] = text[i].substr(0, temp.length) + text[i].substr(temp.length + 1, text[i].length - 1 - temp.length);
+            //     continue;
+            // }
             // ' code
-            
+
             // *** dividing line
-            if(text[i].match(/^(\*+[ ]*?){3,}/)||text[i].match(/^(\-+[ ]*?){3,}/)) {
-                text[i]="<hr>";
+            if (text[i].match(/^(\*+[ ]*?){3,}/) || text[i].match(/^(\-+[ ]*?){3,}/)) {
+                text[i] = "<hr>";
                 continue;
             }
             // *** dividing line
@@ -193,7 +209,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
             }
 
             // * strong
-            strong = text[i].match(/\*\*.*?\*\*/);
+            strong = text[i].match(/\*\*[^*]+?\*\*/);
             if (strong) {
                 for (var j = 0; j < strong.length; j++) {
                     text[i] = text[i].replace(strong[j], "<b>" + strong[j].substr(2, strong[j].length - 4) + "</b>")
@@ -205,7 +221,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
             // while(text[i].match(/\*.*?\*/)){
             //     text[i] = text[i].replace(/(?=\*).*?(?=\*)/,"<em>$&</em>");
             // }
-            em = text[i].match(/\*.*?\*/g);
+            em = text[i].match(/\*[^*]+?\*/g);
             if (em) {
                 for (var j = 0; j < em.length; j++) {
                     text[i] = text[i].replace(em[j], "<em>" + em[j].substr(1, em[j].length - 2) + "</em>")
