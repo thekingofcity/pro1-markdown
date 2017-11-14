@@ -1,12 +1,16 @@
-## Alpha 7
+## Alpha 7 2017-11-14 19:44:35
 
 done
 
 * gramma > blockquote
 
+* [fixed] specific line change into dividing line when enter something like \**33***
+
 To-do
 
 * [feature] href
+
+* [feature] more elegant blockquote
 
 ## Alpha 6
 
