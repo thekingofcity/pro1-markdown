@@ -74,9 +74,9 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
     $scope.refresh = function () {
         function isEmpty(str) {
             if (str == "") {
-                return true
+                return true;
             } else {
-                return false
+                return false;
             }
         }
         //var text = $scope.newString.replace(/\n/g, '<br/>\n').split(/\n/g);
@@ -119,7 +119,12 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
                 continue;
             }
             // ' code
-
+            if (text[i].match(/>.+/)){
+                var temp='<span class="cite">';
+                text[i]=text[i].replace(/>.+/, '<span class="cite">$&</span>');
+                text[i]=text[i].substr(0,temp.length)+text[i].substr(temp.length+1,text[i].length-1-temp.length);
+                continue;
+            }
             // *** dividing line
             if(text[i].match(/(\*+[ ]*?){3,}/)||text[i].match(/(\-+[ ]*?){3,}/)) {
                 text[i]="<hr>";
