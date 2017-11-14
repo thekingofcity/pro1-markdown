@@ -119,9 +119,9 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
                 continue;
             }
             // ' code
-            if (text[i].match(/>.+/)){
-                var temp='<span class="cite">';
-                text[i]=text[i].replace(/>.+/, '<span class="cite">$&</span>');
+           if (text[i].match(/^>.+/)){
+                var temp='<p class="cite">';
+                text[i]=text[i].replace(/>.+/, '<p class="cite">$&</p>');
                 text[i]=text[i].substr(0,temp.length)+text[i].substr(temp.length+1,text[i].length-1-temp.length);
                 continue;
             }

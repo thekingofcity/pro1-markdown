@@ -1,3 +1,13 @@
+## Alpha 7
+
+done
+
+* gramma > blockquote
+
+To-do
+
+* [feature] href
+
 ## Alpha 6
 
 done
