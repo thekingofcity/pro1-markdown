@@ -80,157 +80,155 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
             }
         }
         //var text = $scope.newString.replace(/\n/g, '<br/>\n').split(/\n/g);
-        var title = "", code = false, cite = false; strong = "", em = "";
-        var ulist = false, olist = false, list = false;//refer to    List contains paragraph Feature
         var text = $scope.newString.split(/\n/g);
-        for (var i = 0; i < text.length; i++) {
-            //Some disgust code to end list
-            if (list) {//variable list refer to that there is indent in following lines so </li> shouldn't be placed
-                if (text[i - 1] == "<br/>" && !(isEmpty(text[i]) || text[i].match(/^\s{4}./))) {
-                    list = false;
-                    text[i - 1] = text[i - 1] + "</li>";
+        function processing(start, end) {
+            var title = "", code = false, strong = "", em = "";
+            var ulist = false, olist = false, list = false;//refer to    List contains paragraph Feature
+            for (var i = start; i <= end; i++) {
+                //Some disgust code to end list
+                if (list) {//variable list refer to that there is indent in following lines so </li> shouldn't be placed
+                    if (text[i - 1] == "<br/>" && !(isEmpty(text[i]) || text[i].match(/^\s{4}./))) {
+                        list = false;
+                        text[i - 1] = text[i - 1] + "</li>";
+                    }
                 }
-            }
-            //add </ul></ol> when next line isn't in list and has <ul><ol> above
-            if (!list && ulist && !text[i].match(/^\*[ ]/)) {
-                ulist = false;
-                text[i] = "</ul>" + text[i];
-            }
-            if (!list && olist && !text[i].match(/^[0-9]\./)) {
-                olist = false;
-                text[i] = "</ol>" + text[i];
-            }
+                //add </ul></ol> when next line isn't in list and has <ul><ol> above
+                if (!list && ulist && !text[i].match(/^\*[ ]/)) {
+                    ulist = false;
+                    text[i - 1] = text[i - 1] + "</ul>";
+                }
+                if (!list && olist && !text[i].match(/^[0-9]\./)) {
+                    olist = false;
+                    text[i - 1] = text[i - 1] + "</ol>";
+                }
 
-            // ' code
-            if (code) {//if there is <code> above
-                if (!text[i].match(/^[ ]{4}/)) {//if this line has no indent or something else
-                    text[i] = text[i] + "</code></pre>";
-                    code = false;
-                } else {
-                    text[i] = text[i].substr(4) + "<br/>";
+                // > blackquote
+                if (text[i].match(/^>/)) {
+                    var j = i;
+                    while (j < text.length && text[j].match(/^>/)) {
+                        text[j] = text[j].substr(1);//delete the first > character
+                        j++;
+                    }//determine to which line has the blackquote
+                    processing(i, --j);//all the lines between i and --j are origin lines without the first > character
+                    text[i] = "<blockquote>" + text[i];
+                    text[j] = text[j] + "</blockquote>";
+                    i = j;
+                    continue;
                 }
-                continue;//skip the loop   doesn't change anything in <code>
-            }
-            if (!list && text[i].match(/^[ ]{4}/)) {//can be rewritten as !code&&text[i].match(/[ ]{4}/)
-                //adding !list&& to avoid <code> in list
-                if (!code) {//if this line was indented and there is no <code> above
-                    text[i] = "<pre><code>" + text[i].substr(4) + "<br/>";
-                }
-                code = true;
-                continue;
-            }
-            if (cite) {//if there is <span class="cite"> above
-                if (!text[i].match(/^>/)) {//if this line has no ">""
-                    text[i] = text[i] + "</p>";
-                    cite = false;
-                } else {
-                    text[i] = text[i].substr(1);
-                }
-                //continue;//skip the loop   doesn't change anything in <cite>
-            }
-            if (text[i].match(/^>/)) {
-                if (!cite) {//if this line was indented and there is no <code> above
-                    text[i] = '<p class="cite">' + text[i].substr(1);
-                }
-                cite = true;
-            }
-            // if (text[i].match(/^>.+/)) {
-            //     var temp = '<span class="cite">';
-            //     text[i] = text[i].replace(/^>.+/, '<span class="cite">$&</span>');
-            //     text[i] = text[i].substr(0, temp.length) + text[i].substr(temp.length + 1, text[i].length - 1 - temp.length);
-            //     continue;
-            // }
-            // ' code
+                // > blackquote
 
-            // *** dividing line
-            if (text[i].match(/^(\*+[ ]*?){3,}/) || text[i].match(/^(\-+[ ]*?){3,}/)) {
-                text[i] = "<hr>";
-                continue;
-            }
-            // *** dividing line
-
-            // # Title
-            title = text[i].match(/^#{1,6}/);
-            if (title) {
-                text[i] = text[i].replace(/#{1,6}/, "<h" + title.length + ">$&") + "</h" + title.length + ">";
-            }
-            // # Title
-
-            // */[0-9]. list
-            if (text[i].match(/^\*[ ]/) || text[i].match(/^[0-9]\./)) {
-                //if there is no <ul><ol> above add <ul><ol>
-                if (ulist) {
-                    text[i] = text[i].replace(/^\*[ ]/, "<li>");
-                }
-                else if (olist) {
-                    text[i] = text[i].replace(/^[0-9]\./, "<li>");
-                } else {
-                    if (text[i].match(/^\*[ ]/)) {
-                        text[i] = "<ul>" + text[i].replace(/^\*[ ]/, "<li>");
-                        ulist = true;
+                // ' code
+                if (code) {//if there is <code> above
+                    if (!text[i].match(/^[ ]{4}/)) {//if this line has no indent or something else
+                        text[i] = text[i] + "</code></pre>";
+                        code = false;
                     } else {
-                        text[i] = "<ol>" + text[i].replace(/^[0-9]\./, "<li>");
-                        olist = true;
+                        text[i] = text[i].substr(4) + "<br/>";
                     }
+                    continue;//skip the loop   doesn't change anything in <code>
                 }
-                /* List contains paragraph Feature
-
-                 *   This is a list item with two paragraphs.
-
-                 This is the second paragraph in the list item. You're
-                 only required to indent the first line. Lorem ipsum dolor
-                 sit amet, consectetuer adipiscing elit.
-
-                 *   Another item in the same list.
-
-                 The following code enables gramma above.
-                 Variable list shows whether there are more lines in this list
-                 */
-                var j = i; list = true;
-                if (isEmpty(text[i + 1])) {//*words\nwords
-                    while (j < text.length - 1) {//traverse until the line is indented, then set list=true
-                        if (isEmpty(text[j + 1])) {//*words\n\nwords
-                            j++;
-                        }
-                        else {
-                            if (!text[j + 1].match(/^\s{4}./)) list = false;//line starts without indent
-                            if (text[i + 1].match(/^\*[ ]/) || text[i + 1].match(/^[0-9]\./)) list = false;//line starts without * or [0-9]\.
-                            break;
-                            //if line starts with indent or */[0-9] then list=true
-                        }
+                if (!list && text[i].match(/^[ ]{4}/)) {//can be rewritten as !code&&text[i].match(/[ ]{4}/)
+                    //adding !list&& to avoid <code> in list
+                    if (!code) {//if this line was indented and there is no <code> above
+                        text[i] = "<pre><code>" + text[i].substr(4) + "<br/>";
                     }
+                    code = true;
+                    continue;
                 }
-                //Feature List contains paragraph end here
-                if (list == false || i == text.length - 1) {
-                    text[i] = text[i] + "</li>";//Add </li> in the end
+                // ' code
+
+                // *** dividing line
+                if (text[i].match(/^(\*+[ ]*?){3,}/) || text[i].match(/^(\-+[ ]*?){3,}/)) {
+                    text[i] = "<hr>";
+                    continue;
                 }
+                // *** dividing line
+
+                // # Title
+                title = text[i].match(/^#{1,6}/);
+                if (title) {
+                    text[i] = text[i].replace(/#{1,6}/, "<h" + title.length + ">") + "</h" + title.length + ">";
+                }
+                // # Title
+
                 // */[0-9]. list
+                if (text[i].match(/^\*[ ]/) || text[i].match(/^[0-9]\./)) {
+                    //if there is no <ul><ol> above add <ul><ol>
+                    if (ulist) {
+                        text[i] = text[i].replace(/^\*[ ]/, "<li>");
+                    }
+                    else if (olist) {
+                        text[i] = text[i].replace(/^[0-9]\./, "<li>");
+                    } else {
+                        if (text[i].match(/^\*[ ]/)) {
+                            text[i] = "<ul>" + text[i].replace(/^\*[ ]/, "<li>");
+                            ulist = true;
+                        } else {
+                            text[i] = "<ol>" + text[i].replace(/^[0-9]\./, "<li>");
+                            olist = true;
+                        }
+                    }
+                    /* List contains paragraph Feature
+    
+                     *   This is a list item with two paragraphs.
+    
+                     This is the second paragraph in the list item. You're
+                     only required to indent the first line. Lorem ipsum dolor
+                     sit amet, consectetuer adipiscing elit.
+    
+                     *   Another item in the same list.
+    
+                     The following code enables gramma above.
+                     Variable list shows whether there are more lines in this list
+                     */
+                    var j = i; list = true;
+                    if (isEmpty(text[i + 1])) {//*words\nwords
+                        while (j < text.length - 1) {//traverse until the line is indented, then set list=true
+                            if (isEmpty(text[j + 1])) {//*words\n\nwords
+                                j++;
+                            }
+                            else {
+                                if (!text[j + 1].match(/^\s{4}./)) list = false;//line starts without indent
+                                if (text[i + 1].match(/^\*[ ]/) || text[i + 1].match(/^[0-9]\./)) list = false;//line starts without * or [0-9]\.
+                                break;
+                                //if line starts with indent or */[0-9] then list=true
+                            }
+                        }
+                    }
+                    //Feature List contains paragraph end here
+                    if (list == false || i == text.length - 1) {
+                        text[i] = text[i] + "</li>";//Add </li> in the end
+                    }
+                    // */[0-9]. list
 
-            }
-
-            // * strong
-            strong = text[i].match(/\*\*[^*]+?\*\*/);
-            if (strong) {
-                for (var j = 0; j < strong.length; j++) {
-                    text[i] = text[i].replace(strong[j], "<b>" + strong[j].substr(2, strong[j].length - 4) + "</b>")
                 }
-            }
-            // * strong
 
-            // * emphasize
-            // while(text[i].match(/\*.*?\*/)){
-            //     text[i] = text[i].replace(/(?=\*).*?(?=\*)/,"<em>$&</em>");
-            // }
-            em = text[i].match(/\*[^*]+?\*/g);
-            if (em) {
-                for (var j = 0; j < em.length; j++) {
-                    text[i] = text[i].replace(em[j], "<em>" + em[j].substr(1, em[j].length - 2) + "</em>")
+                // * strong
+                strong = text[i].match(/\*\*[^*]+?\*\*/);
+                if (strong) {
+                    for (var j = 0; j < strong.length; j++) {
+                        text[i] = text[i].replace(strong[j], "<b>" + strong[j].substr(2, strong[j].length - 4) + "</b>")
+                    }
                 }
-            }
-            // * emphasize
+                // * strong
 
-            if (isEmpty(text[i])) { text[i] = text[i] + "<br/>"; }//whether this line is empty add </br>
+                // * emphasize
+                // while(text[i].match(/\*.*?\*/)){
+                //     text[i] = text[i].replace(/(?=\*).*?(?=\*)/,"<em>$&</em>");
+                // }
+                em = text[i].match(/\*[^*]+?\*/g);
+                if (em) {
+                    for (var j = 0; j < em.length; j++) {
+                        text[i] = text[i].replace(em[j], "<em>" + em[j].substr(1, em[j].length - 2) + "</em>")
+                    }
+                }
+                // * emphasize
+
+                if (isEmpty(text[i])) { text[i] = text[i] + "<br/>"; }//whether this line is empty add </br>
+            }
+
         }
+        processing(0, text.length - 1);
         $scope.text0 = text;
         $rootScope.trustHtml = "";
         for (var i = 0; i < $scope.text0.length; i++) {

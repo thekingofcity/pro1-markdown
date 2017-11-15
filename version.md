@@ -1,3 +1,17 @@
+## Alpha 9
+
+done
+
+* [fixed] title contains #
+
+* [improved] list modifies the line after it
+
+* [feature] rewrite blockquote to support nest and gramma inside it
+
+To-do
+
+* [feature] href
+
 ## Alpha 8
 
 done
@@ -6,13 +20,13 @@ done
 
 * [fixed] specific list with multiple indented paragraphs will be rendered as code
 
-* [feature] now blockquote support multiple line
+* [feature] now blockquote supports multiple line
 
 To-do
 
 * [feature] href
 
-* [feature] blockquote support nest and gramma inside it
+* [feature] blockquote supports nest and gramma inside it
 
 ## Alpha 7 2017-11-14 19:44:35
 
@@ -20,7 +34,7 @@ done
 
 * gramma > blockquote
 
-* [fixed] specific line change into dividing line when type something like \*\*33\*\*\*
+* [fixed] specific line will be changed into dividing line when type something like \*\*33\*\*\*
 
 To-do
 
