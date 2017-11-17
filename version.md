@@ -1,8 +1,10 @@
-## Alpha 9
+## Alpha 9 2017-11-17 10:56:34
 
 done
 
 * [fixed] title contains #
+
+* [fixed] list won't be closed with &lt;/ul&gt; or &lt;/ol&gt;
 
 * [improved] list modifies the line after it
 

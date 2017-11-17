@@ -226,7 +226,8 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
 
                 if (isEmpty(text[i])) { text[i] = text[i] + "<br/>"; }//whether this line is empty add </br>
             }
-
+            if(ulist){text[end]=text[end]+"</ul>";}
+            if(olist){text[end]=text[end]+"</ol>";}
         }
         processing(0, text.length - 1);
         $scope.text0 = text;
