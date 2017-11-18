@@ -82,7 +82,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         //var text = $scope.newString.replace(/\n/g, '<br/>\n').split(/\n/g);
         var text = $scope.newString.split(/\n/g);
         function processing(start, end) {
-            var title = "", code = false, strong = "", em = "";
+            var title = "", code = false, strong, em, href;
             var ulist = false, olist = false, list = false;//refer to    List contains paragraph Feature
             for (var i = start; i <= end; i++) {
                 //Some disgust code to end list
@@ -224,10 +224,24 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
                 }
                 // * emphasize
 
+                // []() href
+                href = text[i].match(/\[.*?\]\(.*?\)/)
+                if (href) {
+                    var link, text_;
+                    for (var j = 0; j < href.length; j++) {
+                        link = href[j].match(/\(.*?\)/);
+                        link = link[0].substr(1, link[0].length - 2);
+                        text_ = href[j].match(/\[.*?\]/);
+                        text_ = text_[0].substr(1, text_[0].length - 2);
+                        text[i] = text[i].replace(href[j], "<a href=" + link + ">" + text_ + "</a>");
+                    }
+                }
+                // []() href
+
                 if (isEmpty(text[i])) { text[i] = text[i] + "<br/>"; }//whether this line is empty add </br>
             }
-            if(ulist){text[end]=text[end]+"</ul>";}
-            if(olist){text[end]=text[end]+"</ol>";}
+            if (ulist) { text[end] = text[end] + "</ul>"; }
+            if (olist) { text[end] = text[end] + "</ol>"; }
         }
         processing(0, text.length - 1);
         $scope.text0 = text;
