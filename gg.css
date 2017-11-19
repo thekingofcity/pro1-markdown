@@ -32,3 +32,11 @@
 .highlightedText {
     background-color: #f5e79e;
 }
+
+
+.cite{
+    border-style:solid;
+    border-color: #999999;
+    border-left-width:20px;
+    border-radius: 5px;;
+}
