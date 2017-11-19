@@ -73,7 +73,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
     };
     $scope.refresh = function () {
         function isEmpty(str) {
-            if (str == "") {
+            if (str == "" || str == "<br/>") {
                 return true;
             } else {
                 return false;
@@ -82,7 +82,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         //var text = $scope.newString.replace(/\n/g, '<br/>\n').split(/\n/g);
         var text = $scope.newString.split(/\n/g);
         function processing(start, end) {
-            var title = "", code = false, strong, em, href;
+            var title = "", code = false, strong, em, href, img;
             var ulist = false, olist = false, list = false;//refer to    List contains paragraph Feature
             for (var i = start; i <= end; i++) {
                 //Some disgust code to end list
@@ -137,19 +137,25 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
                 }
                 // ' code
 
+                // # Title
+                title = text[i].match(/^#{1,6}/);
+                if (title) {
+                    text[i] = text[i].replace(/#{1,6}/, "<h" + title.length + ">") + "</h" + title.length + ">";
+                }
+                if (text[i].match(/^=+/)) {
+                    if (i - 1 >= start) { text[i - 1] = "<h1>" + text[i - 1] + "</h1>"; text[i] = ""; continue; }
+                }
+                if (text[i].match(/^-+/)) {
+                    if (i - 1 >= start && (!isEmpty(text[i - 1]))) { text[i - 1] = "<h2>" + text[i - 1] + "</h2>"; text[i] = ""; continue; }
+                }
+                // # Title
+
                 // *** dividing line
                 if (text[i].match(/^(\*+[ ]*?){3,}/) || text[i].match(/^(\-+[ ]*?){3,}/)) {
                     text[i] = "<hr>";
                     continue;
                 }
                 // *** dividing line
-
-                // # Title
-                title = text[i].match(/^#{1,6}/);
-                if (title) {
-                    text[i] = text[i].replace(/#{1,6}/, "<h" + title.length + ">") + "</h" + title.length + ">";
-                }
-                // # Title
 
                 // */[0-9]. list
                 if (text[i].match(/^\*[ ]/) || text[i].match(/^[0-9]\./)) {
@@ -225,15 +231,23 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
                 // * emphasize
 
                 // []() href
-                href = text[i].match(/\[.*?\]\(.*?\)/)
+                href = text[i].match(/\!*\[.*?\]\(.*?\)/)
                 if (href) {
-                    var link, text_;
+                    var link, text_, title;
                     for (var j = 0; j < href.length; j++) {
+                        //if(href[j].charAt(0)=="!"){href[j]=href[j].substr(1);}
                         link = href[j].match(/\(.*?\)/);
                         link = link[0].substr(1, link[0].length - 2);
                         text_ = href[j].match(/\[.*?\]/);
                         text_ = text_[0].substr(1, text_[0].length - 2);
-                        text[i] = text[i].replace(href[j], "<a href=" + link + ">" + text_ + "</a>");
+                        title = link.substr(link.indexOf(" ")).match(/".*?"/);
+                        if (title) {
+                            link = link.substr(0, link.indexOf(" "));
+                            title = title[0];
+                            text[i] = text[i].replace(href[j], "<a href=" + link + " title=" + title + ">" + text_ + "</a>");
+                        } else {
+                            text[i] = text[i].replace(href[j], "<a href=" + link + ">" + text_ + "</a>");
+                        }
                     }
                 }
                 // []() href
