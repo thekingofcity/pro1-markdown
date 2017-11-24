@@ -43,6 +43,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
     $rootScope.trustHtml = "start here...";
     $scope.text0 = [];
     $scope.newString = "start here...";
+    $scope.dic=new Array();
     $scope.highlight = function () {
         $scope.refresh();
         //$log.info("text: " + $rootScope.trustHtml);
@@ -72,6 +73,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
 
     };
     $scope.refresh = function () {
+        dic=new Array();
         function isEmpty(str) {
             if (str == "" || str == "<br/>") {
                 return true;
@@ -82,7 +84,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         //var text = $scope.newString.replace(/\n/g, '<br/>\n').split(/\n/g);
         var text = $scope.newString.split(/\n/g);
         function processing(start, end) {
-            var title = "", code = false, strong, em, href, img;
+            var title = "", code = false, strong, em, href, img,hrefr,rl;
             var ulist = false, olist = false, list = false;//refer to    List contains paragraph Feature
             for (var i = start; i <= end; i++) {
                 //Some disgust code to end list
@@ -252,6 +254,37 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
                 }
                 // []() href
 
+
+
+
+                //[]: reference link
+
+                rl=text[i].match(/(^\[.+\]\:)(.+)/);
+                if (rl){
+                    var link,name_a,name="",title="",title_a=null,sec;
+
+                    name_a=rl[1].match(/[^\[\]\:]/g);
+                    for (var j=0;j<name_a.length;j++){
+                        name+=name_a[j];
+                    }
+                    link=rl[2];
+                    sec=link.match(/\(.*\)/);
+                    if (sec){
+                        title_a=sec[0].match(/[^\(\)]/g);
+                        link=link.substring(0,sec.index);
+                    }
+                    if (title_a){
+                        for (var j=0;j<title_a.length;j++){
+                            title+=title_a[j];
+                        }
+                    }
+
+                    $scope.dic[name]=[link,title];
+                    text[i]="";
+
+                }
+                //[]: reference link
+
                 if (isEmpty(text[i])) { text[i] = text[i] + "<br/>"; }//whether this line is empty add </br>
             }
             if (ulist) { text[end] = text[end] + "</ul>"; }
@@ -263,6 +296,69 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         for (var i = 0; i < $scope.text0.length; i++) {
             $rootScope.trustHtml += $sce.trustAsHtml($scope.text0[i]);
         }
+
+            var wholetext=$rootScope.trustHtml;
+            //[][] href
+            $rootScope.trustHtml="";
+            var hrefr = wholetext.match(/(\[.+?\])+?(\[.*?\])+?/);
+            while (hrefr) {
+                var link="",text_="",sec,start,textrp,text_a,link_a,idx;
+                start=hrefr[0];
+                //idx=hrefr[0].match(/\[.+\]/).index;
+                text_a=hrefr[1].match(/[^\[\]]/g);
+                for (var i=0;i<text_a.length;i++){
+                    text_+=text_a[i];
+                }
+                link_a=hrefr[2].match(/[^\[\]]/g);
+                if (link_a){
+                    for (var i=0;i<link_a.length;i++){
+                        link+=link_a[i];
+                    }
+                }
+                if (link !== ""){  //[text][name]
+                    if ($scope.dic[link]=== undefined){  //no name
+                        $rootScope.trustHtml+=wholetext.substring(0,hrefr.index+hrefr[0].length);
+
+                    }
+                    else{  //has name
+                        if ($scope.dic[link][1]===""){  //no title
+                            textrp=wholetext.substring(0,hrefr.index+hrefr[0].length);
+                            textrp=textrp.replace(start,"<a href=" +$scope.dic[link][0] +">" + text_ + "</a>");
+                            $rootScope.trustHtml+=textrp;
+
+                        }
+                        else{  //has title
+                            textrp=wholetext.substring(0,hrefr.index+hrefr[0].length);
+                            textrp=textrp.replace(start,"<a href=" +$scope.dic[link][0] + " title=" + $scope.dic[link][1] +">" + text_ + "</a>");
+                            $rootScope.trustHtml+=textrp;
+
+                        }
+                    }
+                }
+                else{ //[name][]
+                    if ($scope.dic[text_]=== undefined){  //no name
+                        $rootScope.trustHtml+=wholetext.substring(0,hrefr.index+hrefr[0].length);
+                    }
+                    else{ //has name
+                        if ($scope.dic[text_][1]===""){  //no title
+                            textrp=wholetext.substring(0,hrefr.index+hrefr[0].length);
+                            textrp=textrp.replace(start,"<a href=" +$scope.dic[text_][0] +">" + text_ + "</a>");
+                            $rootScope.trustHtml+=textrp;
+                        }
+                        else{  //has title
+                            textrp=wholetext.substring(0,hrefr.index+hrefr[0].length);
+                            textrp=textrp.replace(start,"<a href=" +$scope.dic[text_][0] + " title=" + $scope.dic[text_][1] +">" + text_ + "</a>");
+                            $rootScope.trustHtml+=textrp;
+                        }
+                    }
+                }
+                wholetext=wholetext.substring(hrefr.index+ hrefr[0].length,wholetext.length);
+                hrefr = wholetext.match(/(\[.+?\])+?(\[.*?\])+?/);
+            }
+            $rootScope.trustHtml+=wholetext;
+
+            //[][]href
+
         //locals.set("trustHtml",$rootScope.trustHtml);
         sessionStorage.trustHtml = $rootScope.trustHtml;
         //$scope.highlight();
