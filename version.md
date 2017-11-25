@@ -1,6 +1,10 @@
-## Alpha 12
+## Alpha 12 2017-11-25 11:47:17
+
 done
+
 * [feature] reference link
+
+* [improved] move reference link to function processing
 
 To-do
 
