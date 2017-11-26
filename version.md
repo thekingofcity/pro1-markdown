@@ -1,8 +1,10 @@
-## Alpha 13
+## Alpha 13 2017-11-26 20:11:36
 
 done
 
 * [improved] incorrect navgation bar
+
+* [feature] extracted function processing to markdownRender.js 
 
 * [feature] using highlight.js to render
 
