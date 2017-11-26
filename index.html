@@ -7,8 +7,13 @@
     <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
 
+    <link rel="stylesheet" href="bower_components/hightlightjs/styles/github.css">
+    <script src="bower_components/hightlightjs/highlight.pack.js"></script>
+    <script src="bower_components/angular-highlightjs/angular-highlightjs.js"></script>
+
     <script src="pro.js"></script>
     <script src="pro.config.js"></script>
+    <script src="main/markdownRender.js"></script>
     <link rel="stylesheet" href="gg.css" />
 
   <!--  <script type="text/javascript" src="download/download.controller.js"></script>
@@ -20,13 +25,14 @@
     <script type="text/javascript" src="main/main.controller.js"></script>
     <script src="main/main.template.html"></script>-->
 
-    <title>mkd</title>
+    <title>Markdown Editor</title>
 </head>
-<body ng-controller="main">
+<body>
 <div class ='nav'>
-    <a  href="#Main" >Save</a>
-    <a  href="#New">New</a>
-    <a href="#Download">Download</a>
+    <a href="#!/Main" ng-controller="main">default</a>
+    <a href="#!/highlightjs" ng-controller="highlightjs">highlightjs</a>
+    <a href="#!/New">New</a>
+    <a href="#!/Download">Download</a>
 
 </div>
 

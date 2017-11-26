@@ -1,3 +1,29 @@
+## Alpha 13 2017-11-26 20:11:36
+
+done
+
+* [improved] incorrect navgation bar
+
+* [feature] extracted function processing to markdownRender.js 
+
+* [feature] using highlight.js to render
+
+To-do
+
+* [bug] hljs seems rendering incorrectly
+
+## Alpha 12 2017-11-25 11:47:17
+
+done
+
+* [feature] reference link
+
+* [improved] move reference link to function processing
+
+To-do
+
+* [bug] definition of rl will cost a line
+
 ## Alpha 11
 
 done
