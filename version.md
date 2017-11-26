@@ -1,3 +1,15 @@
+## Alpha 13
+
+done
+
+* [improved] incorrect navgation bar
+
+* [feature] using highlight.js to render
+
+To-do
+
+* [bug] hljs seems rendering incorrectly
+
 ## Alpha 12 2017-11-25 11:47:17
 
 done
