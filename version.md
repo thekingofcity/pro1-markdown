@@ -1,3 +1,13 @@
+## Alpha 14
+
+done
+
+* [feature] communication between default and highlightjs
+
+To-do
+
+* [bug] hljs seems rendering incorrectly
+
 ## Alpha 13 2017-11-26 20:11:36
 
 done

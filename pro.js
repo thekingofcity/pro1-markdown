@@ -1,3 +1,5 @@
+var str = "start here...";
+
 var pro = angular.module('pro', [
     "ngSanitize",
     "ngRoute",
@@ -48,9 +50,7 @@ pro.factory('locals', ['$window', function ($window) {
 
 pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService', '$log', function ($scope, $sce, $http, $rootScope, notifyService, $log, locals) {
     $rootScope.notify = notifyService;
-    $rootScope.trustHtml = "start here...";
-    $scope.text0 = [];
-    $scope.newString = "start here...";
+    $scope.newString = str;
     $scope.dic=new Array();
     $scope.highlight = function () {
         $scope.refresh();
@@ -81,6 +81,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
 
     };
     $scope.refresh = function () {
+        str = $scope.newString;
         dic=new Array();
         //var text = $scope.newString.replace(/\n/g, '<br/>\n').split(/\n/g);
         var text = $scope.newString.split(/\n/g);
@@ -93,15 +94,17 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         sessionStorage.trustHtml = $rootScope.trustHtml;
         //$scope.highlight();
     };
+    $scope.refresh();
 
 }]);
 
 pro.controller('highlightjs', ["$scope", "$sce", '$http', '$rootScope', 'notifyService', '$log', function ($scope, $sce, $http, $rootScope, notifyService, $log, locals) {
     $rootScope.notify = notifyService;
-    $rootScope.outputHighlightJs = "start here...";
-    $scope.newStringHighlightJs = "start here...";
+    $scope.newStringHighlightJs = str;
     $scope.refreshHighlightJs = function () {
+        str = $scope.newStringHighlightJs;
         $rootScope.outputHighlightJs = $scope.newStringHighlightJs;
     };
+    $scope.refreshHighlightJs();
 
 }]);
