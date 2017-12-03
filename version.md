@@ -1,3 +1,31 @@
+## Alpha 15 2017-12-03 18:46:20
+
+done
+
+* [feature] now text will be saved after closed
+
+* [feature] optimize UI layout
+
+To-do
+
+* [feature] multiple tabs https://www.cnblogs.com/lovesangel/p/7853364.html
+
+* [bug] definition of rl will cost a line
+
+* [bug] hljs seems rendering incorrectly
+
+## Alpha 14
+
+done
+
+* [feature] communication between default and highlightjs
+
+To-do
+
+* [bug] hljs seems rendering incorrectly
+
+* [bug] definition of rl will cost a line
+
 ## Alpha 13 2017-11-26 20:11:36
 
 done
@@ -11,6 +39,8 @@ done
 To-do
 
 * [bug] hljs seems rendering incorrectly
+
+* [bug] definition of rl will cost a line
 
 ## Alpha 12 2017-11-25 11:47:17
 

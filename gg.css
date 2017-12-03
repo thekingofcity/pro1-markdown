@@ -16,17 +16,16 @@
 
 #md,#html{
     height: 510px;
+    width: 100%;
 }
 
 #md{
-    left: 50px;
+    resize: none;
 }
 
 #html{
     border: solid 1px darkgrey;
-    border-radius: 5px;
-    width: 600px;
-    right: 50px
+    /* border-radius: 5px; */
 }
 
 .highlightedText {
