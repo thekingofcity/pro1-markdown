@@ -1,3 +1,15 @@
+## Alpha 15
+
+done
+
+* [feature] now text will be saved after closed
+
+* [feature] optimize UI layout
+
+To-do
+
+* [bug] hljs seems rendering incorrectly
+
 ## Alpha 14
 
 done

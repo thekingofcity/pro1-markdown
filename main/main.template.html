@@ -16,9 +16,13 @@
 
 <div class="input"> -->
     <div class="col-md-6">
-        <textarea id="md" rows="30" cols="50" wrap="virtual" ng-model="newString" ng-change="refresh()" autofocus></textarea>
+        <textarea id="md" wrap="virtual" ng-model="newString" ng-change="refresh()" autofocus ng-style="style()" resize></textarea>
     </div>
     <div class="col-md-6">
-        <p id="html" ng-bind-html="trustHtml"></p>
+        <p id="html" ng-bind-html="trustHtml" ng-style="style()" resize></p>
     </div>
+    <!-- <div class="col-md-4" ng-style="style()" resize>
+        window.windowHeight: {{windowHeight}} <br />
+        window.windowWidth: {{windowWidth}}
+    </div> -->
 </div>
