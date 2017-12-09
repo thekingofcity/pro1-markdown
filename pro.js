@@ -116,13 +116,15 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         $rootScope.trustHtml = wholeText_;
     };
     $scope.post = function () {
-        $http({
-            method: 'post',
-            url: 'http://127.0.0.1:5000/login',
-            data: { name: "aaa", password: "bbb" }
-        }).success(function (req) {
-            console.log(req);
-        })
+        $http.post('http://127.0.0.1:5000/login', { name: "aaa", password: "bbb" })
+            .success(function (resp) {
+                console.log(resp);
+            });
+        // $http({
+        //     method: "post",
+        //     url: 'http://127.0.0.1:5000/login',
+        //     data: { name: "aaa", password: "bbb" }
+        // })
     }
     $scope.refresh();
 
