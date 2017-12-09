@@ -1,10 +1,12 @@
-## Alpha 15 2017-12-06 22:21:10
+## Alpha 15 2017-12-09 21:40:01
 
 done
 
 * [feature] now text will be saved after closed
 
 * [feature] optimize UI layout
+
+* [improved] .js -> .min.js
 
 To-do
 
