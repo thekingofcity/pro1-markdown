@@ -1,4 +1,4 @@
-## Alpha 15 2017-12-09 21:40:01
+## Alpha 15 2017-12-09 22:20:09
 
 done
 
@@ -7,6 +7,8 @@ done
 * [feature] optimize UI layout
 
 * [improved] .js -> .min.js
+
+* [fixed] bugs in UI layout
 
 To-do
 
