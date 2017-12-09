@@ -1,4 +1,4 @@
-## Alpha 15 2017-12-03 18:46:20
+## Alpha 15 2017-12-09 22:20:09
 
 done
 
@@ -6,9 +6,15 @@ done
 
 * [feature] optimize UI layout
 
+* [improved] .js -> .min.js
+
+* [fixed] bugs in UI layout
+
 To-do
 
-* [feature] multiple tabs https://www.cnblogs.com/lovesangel/p/7853364.html
+* [feature] multiple tabs https://www.cnblogs.com/lovesangel/p/7853364.html   http://blog.csdn.net/aitangyong/article/details/48135961
+
+* [feature] shortcut key http://www.it1352.com/193424.html
 
 * [bug] definition of rl will cost a line
 

@@ -30,6 +30,7 @@ pro.factory("notifyService", function () {
 // http://blog.csdn.net/liubinwyzbt/article/details/52330504
 pro.directive('resize', function ($window) {
     return function (scope, element) {
+        var w = angular.element($window);
         scope.getWindowDimensions = function () {
             //return { 'h': w.height(), 'w': w.width() };
             return { 'h': window.innerHeight, 'w': window.innerWidth };
