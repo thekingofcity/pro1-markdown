@@ -5,11 +5,13 @@
             https://docs.angularjs.org/api/ng/input/input%5Btext%5D
         -->
         <div class="col-md-2">
-        <input name="search" type="search" ng-model="notify.search" />
+            <input name="search" type="search" ng-model="notify.search" />
         </div>
-        <div class="col-md-10">
-        <button ng-click="highlight()" >search</button>
-        <!--<p ng-show="!(search.search.$dirty&&search.search.$valid)">Required</p>-->
+        <div class="col-md-2">
+            <button ng-click="highlight()">search</button>
+        </div>
+        <div class="col-md-8">
+            <button ng-click="post()">post</button>
         </div>
     </form>
     <div class="col-md-6">
