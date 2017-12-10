@@ -6,13 +6,6 @@ var pro = angular.module('pro', [
     "hljs"
 ]);
 
-pro.config(function (hljsServiceProvider) {
-    hljsServiceProvider.setOptions({
-        // replace tab with 4 spaces
-        tabReplace: '    '
-    });
-});
-
 pro.controller('download', ['$scope', 'http', function ($scope, $http) {
 }]);
 
@@ -116,15 +109,14 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         $rootScope.trustHtml = wholeText_;
     };
     $scope.post = function () {
-        $http.post('http://127.0.0.1:5000/login', { name: "aaa", password: "bbb" })
-            .success(function (resp) {
+        // https://stackoverflow.com/questions/13741533/angularjs-withcredentials
+        $http.post(
+                'http://127.0.0.1:5000/login', { name: "aaa", password: "bbb" }, {withCredentials: true}
+            ).then(function successCallback(resp) {
+                console.log(resp);
+            },function errorCallback(resp) {
                 console.log(resp);
             });
-        // $http({
-        //     method: "post",
-        //     url: 'http://127.0.0.1:5000/login',
-        //     data: { name: "aaa", password: "bbb" }
-        // })
     }
     $scope.refresh();
 

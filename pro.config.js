@@ -1,5 +1,4 @@
-angular.module('pro').
-    config(["$routeProvider",function($routeProvider) {
+pro.config(["$routeProvider",function($routeProvider) {
         $routeProvider.
             when('/Main',{
             templateUrl:"main/main.template.html",
@@ -15,3 +14,10 @@ angular.module('pro').
             controller:"download"
         }).otherwise('/Main');
 }]);
+
+pro.config(function (hljsServiceProvider) {
+    hljsServiceProvider.setOptions({
+        // replace tab with 4 spaces
+        tabReplace: '    '
+    });
+});
