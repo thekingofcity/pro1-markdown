@@ -5,13 +5,31 @@
             https://docs.angularjs.org/api/ng/input/input%5Btext%5D
         -->
         <div class="col-md-2">
-            <input name="search" type="search" ng-model="notify.search" />
+            <input name="search" type="text" ng-model="notify.search" />
         </div>
         <div class="col-md-2">
             <button ng-click="highlight()">search</button>
         </div>
-        <div class="col-md-8">
-            <button ng-click="post()">post</button>
+    </form>
+    <form name="user">
+        <!-- https://docs.angularjs.org/guide/forms -->
+        <div ng-hide="isLogin" class="col-md-2">
+            <input name="username_" type="text" ng-maxlength="255" ng-model="username" />
+        </div>
+        <div ng-hide="isLogin" class="col-md-2">
+            <input name="password" type="password" ng-model="password" />
+        </div>
+        <div ng-hide="isLogin" class="col-md-2">
+            <button ng-click="post()">login</button>
+        </div>
+        <div ng-show="isLogin" class="col-md-4"></div>
+        <div ng-hide="user.username_.$valid" class="col-md-4">username is too long</div>
+        <div ng-show="loginFailed" class="col-md-2">password doesn't match username</div>
+        <div ng-hide="loginFailed" class="col-md-2">
+            <p>{{displayName}}</p>
+        </div>
+        <div ng-show="isLogin" class="col-md-2">
+            <button ng-click="logout()">logout</button>
         </div>
     </form>
     <div class="col-md-6">

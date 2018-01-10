@@ -1,3 +1,13 @@
+## server a2
+
+done
+
+* [feature] login/logout
+
+To-do
+
+* [feature] upload/download
+
 ## server a1
 
 done

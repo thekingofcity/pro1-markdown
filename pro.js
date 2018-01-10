@@ -3,6 +3,7 @@ var str = "start here...";
 var pro = angular.module('pro', [
     "ngSanitize",
     "ngRoute",
+    "ngCookies",
     "hljs"
 ]);
 
@@ -65,11 +66,22 @@ pro.factory('locals', ['$window', function ($window) {
     }
 }]);
 
-pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService', '$log', 'locals', function ($scope, $sce, $http, $rootScope, notifyService, $log, locals) {
+pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService', '$log', 'locals', '$cookies', function ($scope, $sce, $http, $rootScope, notifyService, $log, locals, $cookies) {
+//pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService', '$log', 'locals', function ($scope, $sce, $http, $rootScope, notifyService, $log, locals) {
     $rootScope.notify = notifyService;
     str = locals.get("newString");
     if (!str) { str = "start here..."; }
     $scope.newString = str;
+    $scope.loginFailed = false;
+    if($cookies.get('name')){
+        $scope.displayName = $cookies.get('name')
+        $scope.isLogin = true;
+    }else{
+        $scope.displayName = "Not login yet."
+        $scope.isLogin = false;
+    }
+    // $scope.displayName = "Not login yet."
+    // $scope.isLogin = false;
     $scope.dic = new Array();
     $scope.highlight = function () {
         $scope.refresh();
@@ -109,14 +121,30 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         $rootScope.trustHtml = wholeText_;
     };
     $scope.post = function () {
-        // https://stackoverflow.com/questions/13741533/angularjs-withcredentials
-        $http.post(
-                'http://127.0.0.1:5000/login', { name: "aaa", password: "bbb" }, {withCredentials: true}
+        // https://stackoverflow.com/questions/13741533/angularjs-withcredentials <-- no use
+        if($scope.user.username_.$valid){
+            $http.post(
+                'http://127.0.0.1:5000/login', { name: $scope.username, password: $scope.password }
             ).then(function successCallback(resp) {
-                console.log(resp);
+                console.log(resp.data);
+                if(resp.data.indexOf("success")>=0){
+                    $scope.displayName = $scope.username;
+                    $scope.username = "";
+                    $scope.password = "";
+                    $scope.isLogin = true;
+                }else if(resp.data.indexOf("fail")>=0){
+                    $scope.loginFailed = true;
+                }
             },function errorCallback(resp) {
                 console.log(resp);
             });
+        }
+    }
+    $scope.logout = function() {
+        $cookies.remove('name');
+        $cookies.remove('UID');
+        $scope.displayName = "Not login yet."
+        $scope.isLogin = false;
     }
     $scope.refresh();
 
