@@ -1,10 +1,10 @@
 .nav{
     background-color: #3c3c3c;
-    font-size: 50px;
-
+    font-size: 30px;
+    color: #33ffff
 }
 
-.nav a{
+.nav label{
     margin-left: 20px;
 }
 

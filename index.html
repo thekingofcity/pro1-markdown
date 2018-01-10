@@ -7,6 +7,7 @@
     <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
     <script src="bower_components/angular-route/angular-route.min.js"></script>
     <script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
+    <script src="bower_components/crypto-js/crypto-js.js"></script>
 
     <link rel="stylesheet" href="bower_components/hightlightjs/styles/github.css">
     <script src="bower_components/hightlightjs/highlight.pack.js"></script>
@@ -23,11 +24,10 @@
     <title>Markdown Editor</title>
 </head>
 <body>
-<div class ='nav'>
-    <a href="#!/Main" ng-controller="main">default</a>
-    <a href="#!/highlightjs" ng-controller="highlightjs">highlightjs</a>
-    <a href="#!/New">New</a>
-    <a href="#!/Download">Download</a>
+<div class ='nav' ng-controller="main">
+    <label ng-click="">Save</label>
+    <label ng-click="">New</label>
+    <label ng-click="">Download</label>
 
 </div>
 

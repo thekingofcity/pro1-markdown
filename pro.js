@@ -67,21 +67,10 @@ pro.factory('locals', ['$window', function ($window) {
 }]);
 
 pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService', '$log', 'locals', '$cookies', function ($scope, $sce, $http, $rootScope, notifyService, $log, locals, $cookies) {
-//pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService', '$log', 'locals', function ($scope, $sce, $http, $rootScope, notifyService, $log, locals) {
+
     $rootScope.notify = notifyService;
-    str = locals.get("newString");
-    if (!str) { str = "start here..."; }
-    $scope.newString = str;
+    $scope.newString = "start here...";
     $scope.loginFailed = false;
-    if($cookies.get('name')){
-        $scope.displayName = $cookies.get('name')
-        $scope.isLogin = true;
-    }else{
-        $scope.displayName = "Not login yet."
-        $scope.isLogin = false;
-    }
-    // $scope.displayName = "Not login yet."
-    // $scope.isLogin = false;
     $scope.dic = new Array();
     $scope.highlight = function () {
         $scope.refresh();
@@ -112,6 +101,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
 
     };
     $scope.refresh = function () {
+        console.log($scope.newString);
         locals.set("newString", $scope.newString);
         dic = new Array();
         var text = $scope.newString.split(/\n/g);
@@ -120,11 +110,14 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         wholeText_ = processing(text, wholeText_, 0, text.length - 1);
         $rootScope.trustHtml = wholeText_;
     };
-    $scope.post = function () {
-        // https://stackoverflow.com/questions/13741533/angularjs-withcredentials <-- no use
+    $scope.login = function () {
+        // https://stackoverflow.com/questions/13741533/angularjs-withcredentials <-- save CROS cookies
         if($scope.user.username_.$valid){
+            var hash = CryptoJS.SHA256($scope.password);
+            hash = hash.toString(CryptoJS.enc.Hex);
+            // https://stackoverflow.com/questions/11889329/word-array-to-string
             $http.post(
-                'http://127.0.0.1:5000/login', { name: $scope.username, password: $scope.password }
+                'http://127.0.0.1:5000/login', { name: $scope.username, password: hash }, {withCredentials: true}, 
             ).then(function successCallback(resp) {
                 console.log(resp.data);
                 if(resp.data.indexOf("success")>=0){
@@ -146,6 +139,25 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         $scope.displayName = "Not login yet."
         $scope.isLogin = false;
     }
+    $scope.dltextDueToCookie = function(){
+        if($cookies.get('name')){
+            $scope.displayName = $cookies.get('name')
+            $scope.isLogin = true;
+            $http.post(
+                'http://127.0.0.1:5000/dltext', { UID: $cookies.get('UID'), docID: 10000 }, {withCredentials: true},
+            ).then(function successCallback(resp) {
+                $scope.newString = resp.data;
+                $scope.refresh();
+            },function errorCallback(resp) {
+                console.log(resp);
+            });
+        }else{
+            $scope.displayName = "Not login yet."
+            $scope.isLogin = false;
+        }
+        console.log($scope.newString);
+    }
+    //$scope.dltextDueToCookie();
     $scope.refresh();
 
 }]);

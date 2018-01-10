@@ -20,7 +20,7 @@
             <input name="password" type="password" ng-model="password" />
         </div>
         <div ng-hide="isLogin" class="col-md-2">
-            <button ng-click="post()">login</button>
+            <button ng-click="login()">login</button>
         </div>
         <div ng-show="isLogin" class="col-md-4"></div>
         <div ng-hide="user.username_.$valid" class="col-md-4">username is too long</div>
