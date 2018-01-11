@@ -1,8 +1,18 @@
+## server a6
+
+done
+
+* [feature] get list and download
+
+To-do
+
+* [feature] user regsiter
+
 ## server a5
 
 done
 
-* [feature] rewrite login/lougout
+* [feature] rewrite login/logout
 
 To-do
 

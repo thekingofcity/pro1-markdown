@@ -41,14 +41,15 @@
     <md-button ng-show="isLogin" class="md-primary md-raised" ng-click="logout()">
         Logout
     </md-button>
-    <!-- <md-button ng-hide="isLogin" class="md-primary md-raised" ng-click="list()">
-            Logout
-    </md-button> -->
-    <div ng-if="status" id="status">
-        <b layout="row" layout-align="center center" class="md-padding">
-          {{status}}
-        </b>
-    </div>
+    <md-button ng-show="isLogin && docHash" class="md-primary md-raised" ng-click="ultext()">
+        Save
+    </md-button>
+    <md-button ng-show="isLogin && !docHash" class="md-primary md-raised" ng-click="showNewNoteWin($event)">
+        Save
+    </md-button>
+    <md-button ng-show="isLogin" class="md-primary md-raised" ng-click="showList($event)">
+        List
+    </md-button>
     <div class="col-md-6">
         <textarea id="md" wrap="virtual" ng-model="newString" ng-change="refresh()" autofocus ng-style="style()" resize></textarea>
     </div>

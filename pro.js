@@ -29,7 +29,7 @@ pro.directive('resize', function ($window) {
             scope.windowHeight = newValue.h;
             //scope.windowWidth = newValue.w;
             scope.style = function () {
-                return { 
+                return {
                     'height': (newValue.h - 130) + 'px'
                     //'width': (newValue.w ) + 'px' 
                 };
@@ -63,10 +63,9 @@ pro.factory('locals', ['$window', function ($window) {
 }]);
 
 pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService', '$log', 'locals', '$cookies', '$mdDialog', function ($scope, $sce, $http, $rootScope, notifyService, $log, locals, $cookies, $mdDialog) {
-
+    $scope.docHash = "";
     $rootScope.notify = notifyService;
     $scope.newString = "start here...";
-    $scope.loginFailed = false;
     $scope.dic = new Array();
     $scope.highlight = function () {
         $scope.refresh();
@@ -107,9 +106,11 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         $rootScope.trustHtml = wholeText_;
     };
 
-    $scope.status = '  ';
+    $rootScope.$on('summonHash', function (e, summonHash) {
+        $scope.dltext(summonHash);
+    });
+
     $scope.customFullscreen = false;
-  
     $scope.showLogin = function (ev) {
         $mdDialog.show({
             controller: DialogController,
@@ -124,22 +125,79 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
                 tmp = answer.split(" ");
                 $scope.login(tmp[0], tmp[1]);
             }, function () {
-                $scope.status = 'You cancelled the dialog.';
+                //$scope.status = 'You cancelled the dialog.';
             });
     };
+    $scope.showNewNoteWin = function (ev) {
+        $mdDialog.show({
+            controller: DialogController,
+            templateUrl: 'newName.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose: true,
+            fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+        })
+            .then(function (answer) {
+                //$scope.status = 'You said the information was "' + answer + '".';
+
+                $http.post(
+                    'http://127.0.0.1:5000/newtext', { "docName": answer, "data": $scope.newString }, { withCredentials: true },
+                ).then(function successCallback(resp) {
+                    console.log(resp);
+                }, function errorCallback(resp) {
+                    console.log(resp);
+                });
+            }, function () {
+                //$scope.status = 'You cancelled the dialog.';
+            });
+    };
+    $scope.showList = function (ev) {
+        $http.get(
+            'http://127.0.0.1:5000/getlist', { withCredentials: true },
+        ).then(function successCallback(resp) {
+            $scope.list_ = eval(resp.data);
+            $mdDialog.show({
+                controller: showListController,
+                templateUrl: 'list.html',
+                parent: angular.element(document.body),
+                locals: {
+                    list_: $scope.list_
+                    //great thanks to https://stackoverflow.com/questions/32465330/what-scope-is-being-used-in-angulars-mddialog        
+                },
+                targetEvent: ev,
+                clickOutsideToClose: true,
+                fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+            });
+            function showListController($rootScope, $scope, $mdDialog, list_) {
+                $scope.list_ = list_
+                $scope.hide = function () {
+                    $mdDialog.hide();
+                };
+                $scope.answer = function (ans) {
+                    $mdDialog.hide();
+                    console.log(ans);
+                    $rootScope.$broadcast('summonHash', ans);
+                    //$scope.$emit('summonHash', ans); <-- no use
+                    // using https://www.cnblogs.com/freefish12/p/5761164.html
+                }
+            }
+        }, function errorCallback(resp) {
+            console.log(resp);
+        });
+    }
 
     function DialogController($scope, $mdDialog) {
-      $scope.hide = function() {
-        $mdDialog.hide();
-      };
-  
-      $scope.cancel = function() {
-        $mdDialog.cancel();
-      };
-  
-      $scope.answer = function(answer) {
-        $mdDialog.hide(answer);
-      };
+        $scope.hide = function () {
+            $mdDialog.hide();
+        };
+
+        $scope.cancel = function () {
+            $mdDialog.cancel();
+        };
+
+        $scope.answer = function (answer) {
+            $mdDialog.hide(answer);
+        };
     }
 
     $scope.login = function (username, password) {
@@ -153,43 +211,53 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
             console.log(resp.data);
             if (resp.data.indexOf("success") >= 0) {
                 $scope.displayName = username;
-                //$scope.username = "";
-                //$scope.password = "";
                 $scope.isLogin = true;
             } else if (resp.data.indexOf("fail") >= 0) {
-                $scope.loginFailed = true;
+                $scope.isLogin = false;
+                //$scope.loginFailed = true;
             }
         }, function errorCallback(resp) {
             console.log(resp);
         });
     }
-    $scope.logout = function() {
+    $scope.logout = function () {
         $cookies.remove('name');
         $cookies.remove('UID');
         $scope.displayName = "Not login yet."
         $scope.isLogin = false;
     }
-    $scope.refreshDueToCookie = function(){
-        if($cookies.get('name')){
+    $scope.refreshDueToCookie = function () {
+        if ($cookies.get('name')) {
             $scope.displayName = $cookies.get('name')
-            //if($scope.isLogin){$scope.dltext();}
-            $scope.dltext();
             $scope.isLogin = true;
-        }else{
+        } else {
             $scope.displayName = "Not login yet."
             $scope.isLogin = false;
         }
-        console.log($scope.newString);
+        //console.log($scope.newString);
     }
-    $scope.dltext = function(){
+    $scope.dltext = function (docHash) {
         $http.post(
-            'http://127.0.0.1:5000/dltext', { UID: $cookies.get('UID'), docID: 10000 }, {withCredentials: true},
+            'http://127.0.0.1:5000/dltext', { "docHash": docHash }, { withCredentials: true },
         ).then(function successCallback(resp) {
+            $scope.docHash = docHash;
             $scope.newString = resp.data;
             $scope.refresh();
-        },function errorCallback(resp) {
+        }, function errorCallback(resp) {
             console.log(resp);
         });
+    }
+    $scope.ultext = function () {
+        if ($scope.docHash == "") {
+        } else {
+            $http.post(
+                'http://127.0.0.1:5000/ultext', { "docHash": $scope.docHash, "data": $scope.newString }, { withCredentials: true },
+            ).then(function successCallback(resp) {
+                console.log(resp);
+            }, function errorCallback(resp) {
+                console.log(resp);
+            });
+        }
     }
     $scope.refreshDueToCookie();
     $scope.refresh();
