@@ -4,14 +4,9 @@ var pro = angular.module('pro', [
     "ngSanitize",
     "ngRoute",
     "ngCookies",
-    "hljs"
+    'ngMaterial'
+    //"hljs"
 ]);
-
-pro.controller('download', ['$scope', 'http', function ($scope, $http) {
-}]);
-
-pro.controller('new', ['$scope', '$http', function ($scope, $http) {
-}]);
 
 pro.factory("notifyService", function () {
     var target = {
@@ -139,39 +134,29 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         $scope.displayName = "Not login yet."
         $scope.isLogin = false;
     }
-    $scope.dltextDueToCookie = function(){
+    $scope.refreshDueToCookie = function(){
         if($cookies.get('name')){
             $scope.displayName = $cookies.get('name')
+            //if($scope.isLogin){$scope.dltext();}
+            $scope.dltext();
             $scope.isLogin = true;
-            $http.post(
-                'http://127.0.0.1:5000/dltext', { UID: $cookies.get('UID'), docID: 10000 }, {withCredentials: true},
-            ).then(function successCallback(resp) {
-                $scope.newString = resp.data;
-                $scope.refresh();
-            },function errorCallback(resp) {
-                console.log(resp);
-            });
         }else{
             $scope.displayName = "Not login yet."
             $scope.isLogin = false;
         }
         console.log($scope.newString);
     }
-    //$scope.dltextDueToCookie();
+    $scope.dltext = function(){
+        $http.post(
+            'http://127.0.0.1:5000/dltext', { UID: $cookies.get('UID'), docID: 10000 }, {withCredentials: true},
+        ).then(function successCallback(resp) {
+            $scope.newString = resp.data;
+            $scope.refresh();
+        },function errorCallback(resp) {
+            console.log(resp);
+        });
+    }
+    $scope.refreshDueToCookie();
     $scope.refresh();
-
-}]);
-
-pro.controller('highlightjs', ["$scope", "$sce", '$http', '$rootScope', 'notifyService', '$log', 'locals', function ($scope, $sce, $http, $rootScope, notifyService, $log, locals) {
-    $rootScope.notify = notifyService;
-    str = locals.get("newString");
-    if (!str) { str = "start here..."; }
-    $scope.newStringHighlightJs = str;
-    $scope.refreshHighlightJs = function () {
-        locals.set("newString", $scope.newStringHighlightJs);
-        str = $scope.newStringHighlightJs;
-        $rootScope.outputHighlightJs = $scope.newStringHighlightJs;
-    };
-    $scope.refreshHighlightJs();
 
 }]);

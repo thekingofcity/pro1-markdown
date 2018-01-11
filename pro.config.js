@@ -15,9 +15,3 @@ pro.config(["$routeProvider",function($routeProvider) {
         }).otherwise('/Main');
 }]);
 
-pro.config(function (hljsServiceProvider) {
-    hljsServiceProvider.setOptions({
-        // replace tab with 4 spaces
-        tabReplace: '    '
-    });
-});

@@ -32,6 +32,9 @@
             <button ng-click="logout()">logout</button>
         </div>
     </form>
+    <md-button class="md-primary md-raised" ng-click="showPrompt($event)">
+        Prompt Dialog
+    </md-button>
     <div class="col-md-6">
         <textarea id="md" wrap="virtual" ng-model="newString" ng-change="refresh()" autofocus ng-style="style()" resize></textarea>
     </div>
