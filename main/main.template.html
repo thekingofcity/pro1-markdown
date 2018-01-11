@@ -11,8 +11,8 @@
             <button ng-click="highlight()">search</button>
         </div>
     </form>
-    <form name="user">
-        <!-- https://docs.angularjs.org/guide/forms -->
+    <!-- <form name="user">
+        https://docs.angularjs.org/guide/forms
         <div ng-hide="isLogin" class="col-md-2">
             <input name="username_" type="text" ng-maxlength="255" ng-model="username" />
         </div>
@@ -31,10 +31,24 @@
         <div ng-show="isLogin" class="col-md-2">
             <button ng-click="logout()">logout</button>
         </div>
-    </form>
-    <md-button class="md-primary md-raised" ng-click="showPrompt($event)">
-        Prompt Dialog
+    </form> -->
+    <div ng-hide="loginFailed" class="col-md-2">
+        <p>{{displayName}}</p>
+    </div>
+    <md-button ng-hide="isLogin" class="md-primary md-raised" ng-click="showLogin($event)">
+        Login
     </md-button>
+    <md-button ng-show="isLogin" class="md-primary md-raised" ng-click="logout()">
+        Logout
+    </md-button>
+    <!-- <md-button ng-hide="isLogin" class="md-primary md-raised" ng-click="list()">
+            Logout
+    </md-button> -->
+    <div ng-if="status" id="status">
+        <b layout="row" layout-align="center center" class="md-padding">
+          {{status}}
+        </b>
+    </div>
     <div class="col-md-6">
         <textarea id="md" wrap="virtual" ng-model="newString" ng-change="refresh()" autofocus ng-style="style()" resize></textarea>
     </div>

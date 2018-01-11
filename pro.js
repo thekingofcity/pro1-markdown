@@ -4,8 +4,9 @@ var pro = angular.module('pro', [
     "ngSanitize",
     "ngRoute",
     "ngCookies",
-    'ngMaterial'
-    //"hljs"
+    'ngMaterial',
+    'ngMessages',
+    'material.svgAssetsCache'
 ]);
 
 pro.factory("notifyService", function () {
@@ -61,7 +62,7 @@ pro.factory('locals', ['$window', function ($window) {
     }
 }]);
 
-pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService', '$log', 'locals', '$cookies', function ($scope, $sce, $http, $rootScope, notifyService, $log, locals, $cookies) {
+pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService', '$log', 'locals', '$cookies', '$mdDialog', function ($scope, $sce, $http, $rootScope, notifyService, $log, locals, $cookies, $mdDialog) {
 
     $rootScope.notify = notifyService;
     $scope.newString = "start here...";
@@ -105,28 +106,62 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         wholeText_ = processing(text, wholeText_, 0, text.length - 1);
         $rootScope.trustHtml = wholeText_;
     };
-    $scope.login = function () {
-        // https://stackoverflow.com/questions/13741533/angularjs-withcredentials <-- save CROS cookies
-        if($scope.user.username_.$valid){
-            var hash = CryptoJS.SHA256($scope.password);
-            hash = hash.toString(CryptoJS.enc.Hex);
-            // https://stackoverflow.com/questions/11889329/word-array-to-string
-            $http.post(
-                'http://127.0.0.1:5000/login', { name: $scope.username, password: hash }, {withCredentials: true}, 
-            ).then(function successCallback(resp) {
-                console.log(resp.data);
-                if(resp.data.indexOf("success")>=0){
-                    $scope.displayName = $scope.username;
-                    $scope.username = "";
-                    $scope.password = "";
-                    $scope.isLogin = true;
-                }else if(resp.data.indexOf("fail")>=0){
-                    $scope.loginFailed = true;
-                }
-            },function errorCallback(resp) {
-                console.log(resp);
+
+    $scope.status = '  ';
+    $scope.customFullscreen = false;
+  
+    $scope.showLogin = function (ev) {
+        $mdDialog.show({
+            controller: DialogController,
+            templateUrl: 'login.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose: true,
+            fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+        })
+            .then(function (answer) {
+                //$scope.status = 'You said the information was "' + answer + '".';
+                tmp = answer.split(" ");
+                $scope.login(tmp[0], tmp[1]);
+            }, function () {
+                $scope.status = 'You cancelled the dialog.';
             });
-        }
+    };
+
+    function DialogController($scope, $mdDialog) {
+      $scope.hide = function() {
+        $mdDialog.hide();
+      };
+  
+      $scope.cancel = function() {
+        $mdDialog.cancel();
+      };
+  
+      $scope.answer = function(answer) {
+        $mdDialog.hide(answer);
+      };
+    }
+
+    $scope.login = function (username, password) {
+        // https://stackoverflow.com/questions/13741533/angularjs-withcredentials <-- save CROS cookies
+        var hash = CryptoJS.SHA256(password);
+        hash = hash.toString(CryptoJS.enc.Hex);
+        // https://stackoverflow.com/questions/11889329/word-array-to-string
+        $http.post(
+            'http://127.0.0.1:5000/login', { name: username, password: hash }, { withCredentials: true },
+        ).then(function successCallback(resp) {
+            console.log(resp.data);
+            if (resp.data.indexOf("success") >= 0) {
+                $scope.displayName = username;
+                //$scope.username = "";
+                //$scope.password = "";
+                $scope.isLogin = true;
+            } else if (resp.data.indexOf("fail") >= 0) {
+                $scope.loginFailed = true;
+            }
+        }, function errorCallback(resp) {
+            console.log(resp);
+        });
     }
     $scope.logout = function() {
         $cookies.remove('name');
