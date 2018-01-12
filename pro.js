@@ -128,6 +128,22 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
                 //$scope.status = 'You cancelled the dialog.';
             });
     };
+    $scope.showSignup = function (ev) {
+        $mdDialog.show({
+            controller: DialogController,
+            templateUrl: 'signup.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose: true,
+            fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+        })
+            .then(function (answer) {
+                tmp = answer.split(" ");//username email password
+                $scope.signup(tmp[0], tmp[1], tmp[2]);
+            }, function () {
+                //$scope.status = 'You cancelled the dialog.';
+            });
+    };
     $scope.showNewNoteWin = function (ev) {
         $mdDialog.show({
             controller: DialogController,
@@ -180,6 +196,28 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
                     //$scope.$emit('summonHash', ans); <-- no use
                     // using https://www.cnblogs.com/freefish12/p/5761164.html
                 }
+                $scope.delNotes = function (noteHash) {
+                    // var confirm = $mdDialog.confirm()
+                    // .title("Delete Confirmation")
+                    // .textContent("Delete this won't change anything local.")
+                    // .ariaLabel('Delete Confirmation')
+                    // .targetEvent(ev)
+                    // .ok('Got it!')
+                    // .cancel('Give me a minute');
+                    // $mdDialog.show(confirm)
+                    // .then(function() {
+                    // }, function() {
+                    //     //cancel callback
+                    // });
+                    
+                    $http.post(
+                        'http://127.0.0.1:5000/delNotes', {"noteHash": noteHash}, { withCredentials: true },
+                    ).then(function successCallback(resp) {
+                        $scope.list_ = eval(resp.data);
+                    }, function errorCallback(resp) {
+                        console.log(resp);
+                    });
+                }
             }
         }, function errorCallback(resp) {
             console.log(resp);
@@ -200,11 +238,29 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         };
     }
 
-    $scope.login = function (username, password) {
-        // https://stackoverflow.com/questions/13741533/angularjs-withcredentials <-- save CROS cookies
+    $scope.signup = function (username, email, password) {
         var hash = CryptoJS.SHA256(password);
         hash = hash.toString(CryptoJS.enc.Hex);
         // https://stackoverflow.com/questions/11889329/word-array-to-string
+        // https://stackoverflow.com/questions/13741533/angularjs-withcredentials <-- save CROS cookies
+        $http.post(
+            'http://127.0.0.1:5000/reg', { 'name': username, 'email': email, 'password': hash }, { withCredentials: true },
+        ).then(function successCallback(resp) {
+            if (resp.data.indexOf("success") >= 0) {
+                $scope.displayName = username;
+                $scope.isLogin = true;
+            } else if (resp.data.indexOf("fail") >= 0) {
+                $scope.isLogin = false;
+            }
+        }, function errorCallback(resp) {
+            console.log(resp);
+        });
+    }
+    $scope.login = function (username, password) {
+        var hash = CryptoJS.SHA256(password);
+        hash = hash.toString(CryptoJS.enc.Hex);
+        // https://stackoverflow.com/questions/11889329/word-array-to-string
+        // https://stackoverflow.com/questions/13741533/angularjs-withcredentials <-- save CROS cookies
         $http.post(
             'http://127.0.0.1:5000/login', { name: username, password: hash }, { withCredentials: true },
         ).then(function successCallback(resp) {
@@ -214,7 +270,6 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
                 $scope.isLogin = true;
             } else if (resp.data.indexOf("fail") >= 0) {
                 $scope.isLogin = false;
-                //$scope.loginFailed = true;
             }
         }, function errorCallback(resp) {
             console.log(resp);

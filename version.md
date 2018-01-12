@@ -2,6 +2,14 @@
 
 done
 
+* [feature] user regsiter
+
+To-do
+
+* [feature] UI and bug fix
+
+done
+
 * [feature] get list and download
 
 To-do

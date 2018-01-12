@@ -2,5 +2,6 @@
     <md-subheader class="md-no-sticky">Your notes</md-subheader>
     <md-list-item ng-repeat="eachList in list_" ng-click="answer(eachList.hash)" class="noright">
         <p>{{ eachList.name }}</p>
+        <md-icon class="md-secondary" ng-click="delNotes(eachList.hash)" aria-label="Delete" md-svg-src="img/icons/ic_close_24px.svg"></md-icon>
     </md-list-item>
 </md-list>
