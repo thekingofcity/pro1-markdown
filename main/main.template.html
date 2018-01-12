@@ -45,7 +45,7 @@
         Logout
     </md-button>
     <md-button ng-show="isLogin && docHash" class="md-primary md-raised" ng-click="ultext()">
-        Save
+        {{changed}}
     </md-button>
     <md-button ng-show="isLogin && !docHash" class="md-primary md-raised" ng-click="showNewNoteWin($event)">
         Save

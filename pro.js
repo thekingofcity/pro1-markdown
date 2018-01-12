@@ -43,26 +43,7 @@ pro.directive('resize', function ($window) {
     }
 })
 
-// http://blog.csdn.net/sinat_31057219/article/details/70212939
-pro.factory('locals', ['$window', function ($window) {
-    return {        //存储单个属性
-        set: function (key, value) {
-            $window.localStorage[key] = value;
-        },        //读取单个属性
-        get: function (key, defaultValue) {
-            return $window.localStorage[key] || defaultValue;
-        },        //存储对象，以JSON格式存储
-        setObject: function (key, value) {
-            $window.localStorage[key] = JSON.stringify(value);//将对象以字符串保存
-        },        //读取对象
-        getObject: function (key) {
-            return JSON.parse($window.localStorage[key] || '{}');//获取字符串并解析成对象
-        }
-
-    }
-}]);
-
-pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService', '$log', 'locals', '$cookies', '$mdDialog', function ($scope, $sce, $http, $rootScope, notifyService, $log, locals, $cookies, $mdDialog) {
+pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService', '$log', '$cookies', '$mdDialog', function ($scope, $sce, $http, $rootScope, notifyService, $log, $cookies, $mdDialog) {
     $scope.docHash = "";
     $rootScope.notify = notifyService;
     $scope.newString = "start here...";
@@ -96,8 +77,10 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
 
     };
     $scope.refresh = function () {
-        console.log($scope.newString);
-        locals.set("newString", $scope.newString);
+        $scope.changed = "save";
+
+        //console.log($scope.newString);
+        //locals.set("newString", $scope.newString);
         dic = new Array();
         var text = $scope.newString.split(/\n/g);
         var wholeText_ = "";
@@ -268,6 +251,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
             if (resp.data.indexOf("success") >= 0) {
                 $scope.displayName = username;
                 $scope.isLogin = true;
+                $scope.docHash = "";
             } else if (resp.data.indexOf("fail") >= 0) {
                 $scope.isLogin = false;
             }
@@ -280,6 +264,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         $cookies.remove('UID');
         $scope.displayName = "Not login yet."
         $scope.isLogin = false;
+        $scope.docHash = "";
     }
     $scope.refreshDueToCookie = function () {
         if ($cookies.get('name')) {
@@ -308,6 +293,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
             $http.post(
                 'http://127.0.0.1:5000/ultext', { "docHash": $scope.docHash, "data": $scope.newString }, { withCredentials: true },
             ).then(function successCallback(resp) {
+                $scope.changed = "saved";
                 console.log(resp);
             }, function errorCallback(resp) {
                 console.log(resp);

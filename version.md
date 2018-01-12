@@ -1,3 +1,15 @@
+## server b2
+
+done
+
+* [fixed] upload success when last user had docHash
+
+* [feature] save button text changes to saved after upload
+
+To-do
+
+* [feature] UI and bug fix
+
 ## server b1
 
 done
