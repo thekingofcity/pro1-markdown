@@ -1,4 +1,14 @@
-## server a6
+## server b1
+
+done
+
+* [feature] min.js
+
+To-do
+
+* [feature] UI and bug fix
+
+## server a7
 
 done
 
@@ -7,6 +17,8 @@ done
 To-do
 
 * [feature] UI and bug fix
+
+## server a6
 
 done
 
