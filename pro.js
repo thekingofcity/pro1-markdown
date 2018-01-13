@@ -90,7 +90,13 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
     };
 
     $rootScope.$on('summonHash', function (e, summonHash) {
-        $scope.dltext(summonHash);
+        // on event caught twice. Solution here still not perfect.
+        // https://stackoverflow.com/questions/25788032/angular-rootscope-broadcast-event-caught-twice-in-controller
+        if ($rootScope.$$listenerCount["summonHash"] > 1) {
+            $rootScope.$$listenerCount["summonHash"] = 0;
+        }else{
+            $scope.dltext(summonHash);
+        }
     });
 
     $scope.customFullscreen = false;
@@ -167,7 +173,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
                 clickOutsideToClose: true,
                 fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
             });
-            function showListController($rootScope, $scope, $mdDialog, list_) {
+            function showListController($scope, $mdDialog, list_) {
                 $scope.list_ = list_
                 $scope.hide = function () {
                     $mdDialog.hide();
@@ -175,11 +181,11 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
                 $scope.answer = function (ans) {
                     $mdDialog.hide();
                     console.log(ans);
-                    $rootScope.$broadcast('summonHash', ans);
-                    //$scope.$emit('summonHash', ans); <-- no use
+                    $scope.$emit('summonHash', ans);
+                    //$rootScope.$broadcast('summonHash', ans);
                     // using https://www.cnblogs.com/freefish12/p/5761164.html
                 }
-                $scope.delNotes = function (noteHash) {
+                $scope.delNotes = function (docHash) {
                     // var confirm = $mdDialog.confirm()
                     // .title("Delete Confirmation")
                     // .textContent("Delete this won't change anything local.")
@@ -194,7 +200,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
                     // });
                     
                     $http.post(
-                        'http://127.0.0.1:5000/delNotes', {"noteHash": noteHash}, { withCredentials: true },
+                        'http://127.0.0.1:5000/delNotes', {"docHash": docHash}, { withCredentials: true },
                     ).then(function successCallback(resp) {
                         $scope.list_ = eval(resp.data);
                     }, function errorCallback(resp) {

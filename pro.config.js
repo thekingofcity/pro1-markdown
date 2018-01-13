@@ -14,4 +14,3 @@ pro.config(["$routeProvider",function($routeProvider) {
             controller:"download"
         }).otherwise('/Main');
 }]);
-
