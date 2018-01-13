@@ -231,7 +231,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         var hash = CryptoJS.SHA256(password);
         hash = hash.toString(CryptoJS.enc.Hex);
         // https://stackoverflow.com/questions/11889329/word-array-to-string
-        // https://stackoverflow.com/questions/13741533/angularjs-withcredentials <-- save CROS cookies
+        // https://stackoverflow.com/questions/13741533/angularjs-withcredentials <-- save CORS cookies
         $http.post(
             'http://127.0.0.1:5000/reg', { 'name': username, 'email': email, 'password': hash }, { withCredentials: true },
         ).then(function successCallback(resp) {
@@ -249,7 +249,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         var hash = CryptoJS.SHA256(password);
         hash = hash.toString(CryptoJS.enc.Hex);
         // https://stackoverflow.com/questions/11889329/word-array-to-string
-        // https://stackoverflow.com/questions/13741533/angularjs-withcredentials <-- save CROS cookies
+        // https://stackoverflow.com/questions/13741533/angularjs-withcredentials <-- save CORS cookies
         $http.post(
             'http://127.0.0.1:5000/login', { name: username, password: hash }, { withCredentials: true },
         ).then(function successCallback(resp) {

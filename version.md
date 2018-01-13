@@ -1,8 +1,10 @@
-## server b3
+## server b3 2018-01-13 12:46:37
 
 done
 
 * [fixed] on caught twice after broadcast
+
+* [fixed] wrong terminology in comments 
 
 To-do
 
