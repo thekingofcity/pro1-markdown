@@ -1,4 +1,4 @@
-## server b3 2018-01-13 12:46:37
+## server b3 2018-01-14 15:34:25
 
 done
 
@@ -9,6 +9,10 @@ done
 To-do
 
 * [feature] UI and bug fix
+
+* [feature] only VIP users can have more than one note. Require server side effort.
+
+* [feature] notes can be encrypted.
 
 ## server b2
 
