@@ -1,10 +1,14 @@
-## server b3 2018-01-14 15:34:25
+## server b3 2018-01-19 21:42:53
 
 done
 
 * [fixed] on caught twice after broadcast
 
 * [fixed] wrong terminology in comments 
+
+* [fixed] "uncaught syntaxerror: unexpected token )" in $http at lower version of Chrome
+
+* [fixed] update README.md
 
 To-do
 

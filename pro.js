@@ -146,7 +146,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
                 //$scope.status = 'You said the information was "' + answer + '".';
 
                 $http.post(
-                    'http://127.0.0.1:5000/newtext', { "docName": answer, "data": $scope.newString }, { withCredentials: true },
+                    'http://127.0.0.1:5000/newtext', { "docName": answer, "data": $scope.newString }, { withCredentials: true }
                 ).then(function successCallback(resp) {
                     console.log(resp);
                 }, function errorCallback(resp) {
@@ -158,7 +158,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
     };
     $scope.showList = function (ev) {
         $http.get(
-            'http://127.0.0.1:5000/getlist', { withCredentials: true },
+            'http://127.0.0.1:5000/getlist', { withCredentials: true }
         ).then(function successCallback(resp) {
             $scope.list_ = eval(resp.data);
             $mdDialog.show({
@@ -200,7 +200,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
                     // });
                     
                     $http.post(
-                        'http://127.0.0.1:5000/delNotes', {"docHash": docHash}, { withCredentials: true },
+                        'http://127.0.0.1:5000/delNotes', {"docHash": docHash}, { withCredentials: true }
                     ).then(function successCallback(resp) {
                         $scope.list_ = eval(resp.data);
                     }, function errorCallback(resp) {
@@ -233,7 +233,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         // https://stackoverflow.com/questions/11889329/word-array-to-string
         // https://stackoverflow.com/questions/13741533/angularjs-withcredentials <-- save CORS cookies
         $http.post(
-            'http://127.0.0.1:5000/reg', { 'name': username, 'email': email, 'password': hash }, { withCredentials: true },
+            'http://127.0.0.1:5000/reg', { 'name': username, 'email': email, 'password': hash }, { withCredentials: true }
         ).then(function successCallback(resp) {
             if (resp.data.indexOf("success") >= 0) {
                 $scope.displayName = username;
@@ -251,7 +251,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         // https://stackoverflow.com/questions/11889329/word-array-to-string
         // https://stackoverflow.com/questions/13741533/angularjs-withcredentials <-- save CORS cookies
         $http.post(
-            'http://127.0.0.1:5000/login', { name: username, password: hash }, { withCredentials: true },
+            'http://127.0.0.1:5000/login', { name: username, password: hash }, { withCredentials: true }
         ).then(function successCallback(resp) {
             console.log(resp.data);
             if (resp.data.indexOf("success") >= 0) {
@@ -284,7 +284,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
     }
     $scope.dltext = function (docHash) {
         $http.post(
-            'http://127.0.0.1:5000/dltext', { "docHash": docHash }, { withCredentials: true },
+            'http://127.0.0.1:5000/dltext', { "docHash": docHash }, { withCredentials: true }
         ).then(function successCallback(resp) {
             $scope.docHash = docHash;
             $scope.newString = resp.data;
@@ -297,7 +297,7 @@ pro.controller('main', ["$scope", "$sce", '$http', '$rootScope', 'notifyService'
         if ($scope.docHash == "") {
         } else {
             $http.post(
-                'http://127.0.0.1:5000/ultext', { "docHash": $scope.docHash, "data": $scope.newString }, { withCredentials: true },
+                'http://127.0.0.1:5000/ultext', { "docHash": $scope.docHash, "data": $scope.newString }, { withCredentials: true }
             ).then(function successCallback(resp) {
                 $scope.changed = "saved";
                 console.log(resp);
