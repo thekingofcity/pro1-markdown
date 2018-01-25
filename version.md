@@ -1,4 +1,4 @@
-## server b3 2018-01-19 21:49:37
+## server b3 2018-01-25 17:57:46
 
 done
 
@@ -9,6 +9,8 @@ done
 * [fixed] "uncaught syntaxerror: unexpected token )" in $http at lower version of Chrome
 
 * [fixed] update README.md
+
+* [feature] new img resources
 
 To-do
 
